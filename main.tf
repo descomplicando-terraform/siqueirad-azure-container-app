@@ -87,12 +87,8 @@ resource "azurerm_container_app" "elsa_studio" {
         value = "Development"
       }
       env {
-        name  = "HTTP__BASEURL"
-        value = "https://${azurerm_container_app.elsa_server.latest_revision_fqdn}"
-      }
-      env {
-        name  = "ELSA__SERVER__BASEURL"
-        value = "https://${azurerm_container_app.elsa_server.latest_revision_fqdn}"
+        name  = "ELSASERVER__URL"
+        value = "https://${azurerm_container_app.elsa_server.ingress[0].fqdn}/elsa/api"
       }
       name   = "elsa-image-container"
       image  = "docker.io/elsaworkflows/elsa-studio-v3:latest"
