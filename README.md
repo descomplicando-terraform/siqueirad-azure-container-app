@@ -8,26 +8,26 @@ Módulo para criação do ambiente para testar a aplicação Elsa Workflows como
 - Conta no Azure
 - [Autenticação do Terraform para Azure](https://learn.microsoft.com/pt-br/azure/developer/terraform/authenticate-to-azure)
 
-# Processo de realização do trabalho
+## Processo de realização do trabalho
 
 O primeiro plano era construir um módulo para prover uma aplicação web com banco de dados, tanto em ambiente de desenvolvimento quanto de produção. Mas devido ao atropelo irracional imposto pelo modo de produção atual e as obrigações sociais, o escopo deste trabalho foi reduzido: A aplicação [Elsa Workflows](https://v3.elsaworkflows.io/) foi escolhida para ser testada num ambiente simples.
 
 - ## Uma única aplicação de container - Error: Self-referential block
 
-  Ocorreu um problema em implementar uma [única aplicação com o servidor e studio](https://v3.elsaworkflows.io/docs/installation/docker#elsa-server-studio), pois é necessário definir a variável de ambiente `HTTP__BASEURL`, neste caso com o valor [retornado](#Outputs) pelo recurso.  
+  Ocorreu um problema em implementar uma [única aplicação com o servidor e studio](https://v3.elsaworkflows.io/docs/installation/docker#elsa-server-studio), pois é necessário definir a variável de ambiente `HTTP__BASEURL`, neste caso com o valor [retornado](#outputs) pelo recurso.  
   Então, aconteceu o: `Error: Self-referential block`, logo a solução mais simples foi separar em duas aplicações de container (Servidor e Studio).
 
 - ## Modularização
 
   Ao inves de construir dois módulos com uso de output de um como input do outro, para estudar alguns mecanismos explicados no curso, decidi fazer um módulo de aplicação com implementação de `for_each`. Logo deve-se executar duas vezes o comando:
 
-  ```
+  ```bash
   terraform apply
   ```
 
   - Na primeira vez peguea url do server no output:
 
-  ```
+  ```bash
   instancias = [
     "elsa-server--74rhvcc.ambitioussand-a1d91173.eastus.azurecontainerapps.io",
     "elsa-studio--0000001.ambitioussand-a1d91173.eastus.azurecontainerapps.io",
@@ -38,9 +38,9 @@ O primeiro plano era construir um módulo para prover uma aplicação web com ba
 
 ## Providers
 
-| Name                                                | Version |
-| --------------------------------------------------- | ------- |
-| <a name="azurerm"></a> [azurerm](#provider_azurerm) | ~> 3.0  |
+| Name    | Version |
+| ------- | ------- |
+| azurerm | ~> 3.0  |
 
 ## Modules
 
@@ -57,8 +57,8 @@ No modules.
 
 ## Outputs
 
-| Name                                                                          | Description          |
-| ----------------------------------------------------------------------------- | -------------------- |
-| <a name="output_container_app_url"></a> [azurerm_container_app_url](#Outputs) | URL do Container App |
+| Name                                  | Description          |
+| ------------------------------------- | -------------------- |
+| [azurerm_container_app_url](#outputs) | URL do Container App |
 
 <!-- END_TF_DOCS -->
