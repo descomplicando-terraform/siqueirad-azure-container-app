@@ -8,17 +8,13 @@ locals {
 
 }
 
-resource "azurerm_resource_group" "emmilly-rg" {
-  name     = "iac-${var.app}-rg"
-  location = var.location
-}
-
 
 resource "azurerm_container_app" "app" {
-  name = "ca-${var.app}"
+  for_each = var.instancias
+  name     = each.value["name"]
 
   container_app_environment_id = var.container_app_environment_id
-  resource_group_name          = azurerm_resource_group.emmilly-rg.name
+  resource_group_name          = "iac-${var.app}-rg"
   revision_mode                = "Single"
 
 
@@ -35,47 +31,19 @@ resource "azurerm_container_app" "app" {
   template {
     container {
       dynamic "env" {
-        for_each = var.envs
+        for_each = each.value["envs"]
         iterator = filtro
         content {
           name  = filtro.value["name"]
           value = filtro.value["value"]
         }
       }
-      name   = "${var.app}-container"
-      image  = "docker.io/elsaworkflows/elsa-server-and-studio-v3:latest"
+      name   = "${each.value["name"]}-container"
+      image  = each.value["image"]
       cpu    = 0.25
       memory = "0.5Gi"
     }
   }
   tags = local.default_tags
-}
-
-resource "azapi_update_resource" "example" {
-  type        = "Microsoft.App/containerApps@2022-10-01"
-  resource_id = azurerm_container_app.app.id
-  depends_on  = [azurerm_container_app.app]
-
-  body = jsonencode({
-    properties = {
-      template = {
-        containers = [
-          {
-            env = [
-              {
-                name  = "HTTP__BASEURL"
-                value = "https://${azurerm_container_app.app.latest_revision_fqdn}"
-              },
-              {
-                name  = "ELSASERVER__URL"
-                value = "https://${azurerm_container_app.app.latest_revision_fqdn}/elsa/api/"
-              }
-            ]
-          }
-        ]
-      }
-    }
-  })
-
 }
 

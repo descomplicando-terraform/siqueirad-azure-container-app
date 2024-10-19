@@ -18,7 +18,23 @@ O primeiro plano era construir um módulo para prover uma aplicação web com ba
   Então, aconteceu o: `Error: Self-referential block`, logo a solução mais simples foi separar em duas aplicações de container (Servidor e Studio).
 
 - ## Modularização
-  TODO
+
+  Ao inves de construir dois módulos com uso de output de um como input do outro, para estudar alguns mecanismos explicados no curso, decidi fazer um módulo de aplicação com implementação de `for_each`. Logo deve-se executar duas vezes o comando:
+
+  ```
+  terraform apply
+  ```
+
+  - Na primeira vez peguea url do server no output:
+
+  ```
+  instancias = [
+    "elsa-server--74rhvcc.ambitioussand-a1d91173.eastus.azurecontainerapps.io",
+    "elsa-studio--0000001.ambitioussand-a1d91173.eastus.azurecontainerapps.io",
+   ]
+  ```
+
+  Cole no arquivo `/main.tf` no valor da variavel de ambiente `ELSASERVER__URL` e execute mais uma vez para testar a aplicação elsa worfklow. Acredito que no uso deste aplicativo em produção já terá um dominio proprio e não precisará rodar duas vezes para aplicar a solução.
 
 ## Providers
 

@@ -1,3 +1,3 @@
 output "azurerm_container_app_url" {
-  value = azurerm_container_app.app.latest_revision_fqdn
+  value = [for instance in azurerm_container_app.app : instance.latest_revision_fqdn]
 }

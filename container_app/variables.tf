@@ -38,3 +38,13 @@ variable "container_app_environment_id" {
   type        = string
 }
 
+variable "instancias" {
+  type = map(object({
+    name  = string
+    image = string
+    envs  = list(any)
+    })
+  )
+  description = "Mapa de instancias"
+}
+
